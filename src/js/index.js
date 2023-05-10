@@ -25,8 +25,8 @@ button.onclick = () => {
     document.body.appendChild(script)
 }
 
-window.onerror = (error) => {
+window.onerror = (error, url, lineNumber, column, errorObj) => {
     var elem = document.getElementById('errors');
-    elem.innerHTML += `<div class="error">${error}</div>`
+    elem.innerHTML += `<div class="error">${error}</div><div class="error">At line ${lineNumber-6}</div>`
     elem.scrollTop = elem.scrollHeight;
 }
