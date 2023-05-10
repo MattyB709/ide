@@ -22,3 +22,7 @@ body {
   background-color: white;
   overflow-y: scroll;
 }
+
+.error {
+  background-color: red;
+}
