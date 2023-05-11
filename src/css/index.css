@@ -26,6 +26,8 @@ body {
   white-space: pre;
 
   overflow: scroll;
+  border: none;
+  outline: none;
 }
 
 #editing {
@@ -59,6 +61,8 @@ body {
 
 .edit-font {
   font-size: 150%;
+
+  font-family: monospace;
 }
 
 /* #text-box {
