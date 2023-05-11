@@ -5,7 +5,40 @@ body {
   background-color: rgb(64, 64, 64);
 }
 
-#text-box {
+
+#pre-code {
+  margin: 0px;
+}
+
+#editing, #code {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  left: 0%;
+  top: 0%;
+
+  overflow: auto;
+  white-space: nowrap;
+
+  padding: 0px;
+
+  white-space: pre;
+
+  overflow: scroll;
+}
+
+#editing {
+  z-index: 1;
+  color: transparent;
+  background: transparent;
+  caret-color: white;
+
+  resize: none;
+}
+
+#text-area {
+
   width: 70%;
   height: 50%;
   position: absolute;
@@ -13,15 +46,39 @@ body {
   top: 5%;
 }
 
+#text-area::-webkit-scrollbar {
+  visibility: hidden;
+}
+
+#code {
+  z-index: 0;
+  background-color: rgb(37, 50, 59);
+
+  color: white;
+}
+
+.edit-font {
+  font-size: 150%;
+}
+
+/* #text-box {
+  width: 70%;
+  height: 50%;
+  position: absolute;
+  left: 15%;
+  top: 5%;
+} */
+
 #errors {
   width: 70%;
   height: 20%;
   position: absolute;
   left: 15%;
   bottom: 5%;
+  white-space: pre;
   background-color: white;
   overflow-y: scroll;
-}
+} 
 
 .error {
   background-color: red;

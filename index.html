@@ -8,9 +8,18 @@
     <title>Awesome IDE</title>
 </head>
     <body>
-        <textarea id="text-box"><div class="error">tets</div></textarea>
+        <div id="text-area">
+            <textarea class="edit-font" id="editing" 
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+            ></textarea>
+
+            <code class="edit-font" id="code"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+            ></code>
+        </div>
+
         <button id="magic-button">Magic Button</button>
-        <pre><div id="errors"></div></pre>
+        <div id="errors"></div>
         <script src="./src/js/index.js"></script>
     </body>
 </html>

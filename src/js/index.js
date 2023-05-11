@@ -1,8 +1,28 @@
-const textBox = document.getElementById("text-box")
-
 var errors = ""
 
 const button = document.getElementById("magic-button")
+
+const rawEditor = document.getElementById("editing")
+const stylizedCode = document.getElementById("code")
+
+const log = console.log
+
+function onScroll()
+{
+    stylizedCode.scrollLeft = rawEditor.scrollLeft
+    stylizedCode.scrollTop = rawEditor.scrollTop
+
+    log(rawEditor.scrollTop + " " + stylizedCode.scrollTop)
+}
+
+rawEditor.oninput = () => {
+    onScroll()
+    stylizedCode.innerHTML = rawEditor.value
+}
+
+rawEditor.onscroll = onScroll
+
+
 
 const scriptTemplate = `
 console.log = (val) => {
@@ -12,7 +32,6 @@ console.log = (val) => {
 }
 {code}
 `
-
 // console.log = () => {}
 
 button.onclick = () => {
@@ -20,7 +39,7 @@ button.onclick = () => {
     script.onerror = (error) => {
         console.log(error)
     }
-    script.innerHTML = scriptTemplate.replace("{code}", textBox.value)
+    script.innerHTML = scriptTemplate.replace("{code}", rawEditor.value)
 
     document.body.appendChild(script)
 }
