@@ -69,6 +69,8 @@ function removeThans(value)
     return value.replaceAll("<", "&lt").replaceAll(">", "&gt")
 }
 
+const commentEndings = {"//": "\n", "/*": "*/"}
+
 function styleCode(code)
 {
     let parts = []
@@ -77,7 +79,27 @@ function styleCode(code)
     {
         let firstChar = code.substring(i, i+1)
 
-        if (stringStarters.indexOf(firstChar)!=-1)
+        
+        // Comments
+        if (code.length > i+1 && commentEndings[code.substring(i, i+2)] != undefined)
+        {
+            let ending = commentEndings[code.substring(i, i+2)]
+            let end = code.indexOf(ending, i)
+
+            if (end == -1)
+            {
+                // Sad ending
+                let str = code.substring(i, code.length)
+                parts.push(str)
+                i+=str.length;
+            } else {
+                let str = code.substring(i, end+ending.length)
+                parts.push(str)
+                i+=str.length-1;
+            }
+        }
+        // Strings
+        else if (stringStarters.indexOf(firstChar)!=-1)
         {
             let str = firstChar
             let slashCancel
@@ -124,12 +146,16 @@ function styleCode(code)
 
     let newcode = ""
     parts.map((part) => {
-
-        if (stringStarters.indexOf(part.substring(0, 1)) != -1)
+        if (part.length > 1 && commentEndings[part.substring(0, 2)])
+            newcode += colorCode(removeThans(part), "grey")
+        else if (stringStarters.indexOf(part.substring(0, 1)) != -1)
+            // Strings
             newcode += colorCode(removeThans(part), "green")
         else if (keywords[part])
+            // Keywords and stuff
             newcode += colorCode(removeThans(part), keywords[part])
         else 
+            // Normal
             newcode += removeThans(part)
     })
 
