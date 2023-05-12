@@ -9,17 +9,24 @@
 </head>
     <body>
         <div id="text-area">
-            <textarea class="edit-font" id="editing" 
-            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-            ></textarea>
+            <div id="widow-header"></div>
 
-            <code class="edit-font" id="code"
-                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-            ></code>
+            <div id="editor-window" class="window">
+                <textarea class="edit-font" id="editing" 
+                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                ></textarea>
+
+                <code class="edit-font" id="code"
+                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                ></code>
+            </div>
+            <div id="console-window" class="window">
+                
+            </div>
         </div>
 
-        <button id="magic-button">Magic Button</button>
-        <div id="errors"></div>
-        <script src="./src/js/index.js"></script>
+        <!-- <button id="magic-button">Magic Button</button>
+        <div id="errors"></div> -->
+        <script src="./src/js/index.js"></script> 
     </body>
 </html>

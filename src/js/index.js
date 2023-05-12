@@ -26,8 +26,11 @@ const stringStarters = "\"`'"
 const keywordcolor = "red"
 const termcolor = "blue"
 const parenthesesColor = 'yellow'
-const bracesColor = "purple" 
+const bracesColor = "#ae3fbf" 
 const operatorcolor = "orange"
+const stringColor = "#86eb93"
+const commentColor = "grey"
+const propertyColor = "#86ceeb"
 
 const keywords = {
     // Keywords
@@ -37,6 +40,8 @@ const keywords = {
     "const": keywordcolor,
     "var": keywordcolor,
     "function": keywordcolor,
+    "if": keywordcolor,
+    "else": keywordcolor,
 
     // Terms
     "document": termcolor,
@@ -59,9 +64,19 @@ const keywords = {
     ":": operatorcolor,
 }
 
-function isValid(text)
+function isValidChar(text)
 {
     return validIdentifiers.indexOf(text) != -1
+}
+
+function isValidString(text)
+{
+    for (let i = 0; i < text.length; i++)
+    {
+        if (!isValidChar(text.substring(i, i+1)))
+            return false;
+    }
+    return true
 }
 
 function removeThans(value)
@@ -122,10 +137,10 @@ function styleCode(code)
                 i += 1;
             }
         }
-        else if (isValid(firstChar))
+        else if (isValidChar(firstChar))
         {
             let indetifierString = firstChar
-            while(code.length > i+1 && isValid(code.substring(i+1, i+2)))
+            while(code.length > i+1 && isValidChar(code.substring(i+1, i+2)))
             {
                 indetifierString += code.substring(i+1, i+2)
                 i++;
@@ -145,19 +160,25 @@ function styleCode(code)
     log(parts)
 
     let newcode = ""
-    parts.map((part) => {
+    for (let i = 0; i < parts.length; i++)
+    {
+        const part = parts[i]
+        const prepart = i > 0 && parts[i-1]
         if (part.length > 1 && commentEndings[part.substring(0, 2)])
-            newcode += colorCode(removeThans(part), "grey")
+            newcode += colorCode(removeThans(part), commentColor)
         else if (stringStarters.indexOf(part.substring(0, 1)) != -1)
             // Strings
-            newcode += colorCode(removeThans(part), "green")
+            newcode += colorCode(removeThans(part), stringColor)
         else if (keywords[part])
             // Keywords and stuff
             newcode += colorCode(removeThans(part), keywords[part])
+        else if (isValidString(part) && prepart==".")
+            // Stuff after the dot
+            newcode += colorCode(removeThans(part), propertyColor)
         else 
             // Normal
             newcode += removeThans(part)
-    })
+    }
 
 
     return newcode
