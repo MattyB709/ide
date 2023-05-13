@@ -1,5 +1,6 @@
 :root {
   --main-border: solid 2px rgba(0, 0, 0, 0.296);
+  --top-bar-space: 5%;
   --action-bar-space: 5%;
   --side-bar-space: 15%;
 }
@@ -70,7 +71,7 @@ body {
   bottom: 0%;
   position: absolute;
   left: var(--side-bar-space);
-  top: var(--action-bar-space);
+  top: calc(var(--action-bar-space) + var(--top-bar-space));
 
   margin-top: .25em;
   margin-left: .25em;
@@ -92,19 +93,39 @@ body {
   color: rgb(255, 255, 255);
 }
 
-#action-bar {
+#top-bar {
   position: absolute;
   left: 0%;
   top: 0%;
   border-bottom: var(--main-border);
   width: 100%;
+  height: var(--top-bar-space);
+}
+
+#action-bar {
+  position: absolute;
+  left: var(--side-bar-space);
+  top: var(--top-bar-space);;
+  border-bottom: var(--main-border);
+  right: 0%;
   height: var(--action-bar-space);
+}
+
+.action-tab {
+  display: inline-block;
+  margin-top: 2px;
+  height: calc(100% - 1em - 2px);
+  font-size: 150%;
+  color: white;
+  padding: .5em;
+  vertical-align:middle;
+  background-color: rgba(255, 255, 255, 0.123);
 }
 
 #side-bar {
   position: absolute;
   left: 0%;
-  top: var(--action-bar-space);
+  top: var(--top-bar-space);
   border-right: var(--main-border);
   width: var(--side-bar-space);
   bottom: 0%;
