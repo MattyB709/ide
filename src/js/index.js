@@ -4,6 +4,7 @@ const button = document.getElementById("magic-button")
 
 const rawEditor = document.getElementById("editing")
 const stylizedCode = document.getElementById("code")
+const lineNumbers = document.getElementById("line-numbers")
 
 const log = console.log
 
@@ -11,6 +12,7 @@ function onScroll()
 {
     stylizedCode.scrollLeft = rawEditor.scrollLeft
     stylizedCode.scrollTop = rawEditor.scrollTop
+    lineNumbers.scrollTop = rawEditor.scrollTop
 
     // log(rawEditor.scrollTop + " " + stylizedCode.scrollTop)
 }
@@ -18,6 +20,27 @@ function onScroll()
 function colorCode(text, color)
 {
     return `<span style="color: ${color};">${text}</span>`
+}
+
+function getTextWidth(text, font) {
+    // re-use canvas object for better performance
+    const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    const context = canvas.getContext("2d");
+    context.font = font;
+    const metrics = context.measureText(text);
+    return metrics.width;
+  }
+
+function getCssStyle(element, prop) {
+    return window.getComputedStyle(element, null).getPropertyValue(prop);
+}
+
+function getCanvasFont(el = document.body) {
+  const fontWeight = getCssStyle(el, 'font-weight') || 'normal';
+  const fontSize = getCssStyle(el, 'font-size') || '16px';
+  const fontFamily = getCssStyle(el, 'font-family') || 'Times New Roman';
+  
+  return `${fontWeight} ${fontSize} ${fontFamily}`;
 }
 
 const validIdentifiers = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -31,6 +54,7 @@ const operatorcolor = "orange"
 const stringColor = "#86eb93"
 const commentColor = "grey"
 const propertyColor = "#86ceeb"
+const lineColor = "red"
 
 const keywords = {
     // Keywords
@@ -42,6 +66,7 @@ const keywords = {
     "function": keywordcolor,
     "if": keywordcolor,
     "else": keywordcolor,
+    "return": keywordcolor,
 
     // Terms
     "document": termcolor,
@@ -61,7 +86,10 @@ const keywords = {
     "-": operatorcolor,
     "*": operatorcolor,
     "/": operatorcolor,
+
     ":": operatorcolor,
+    ".": operatorcolor,
+    ";": operatorcolor,
 }
 
 function isValidChar(text)
@@ -156,8 +184,8 @@ function styleCode(code)
 
     }
 
-    log(code)
-    log(parts)
+    // log(code)
+    // log(parts)
 
     let newcode = ""
     for (let i = 0; i < parts.length; i++)
@@ -180,6 +208,39 @@ function styleCode(code)
             newcode += removeThans(part)
     }
 
+    // Line Numbers
+    const lineCount = (newcode.match(/\n/g) || []).length+1;
+    const spaceCount = Math.ceil(Math.log10(lineCount))
+    let lined = ""
+    log(spaceCount)
+    for (let i = 0; i < lineCount; i++)
+    {
+        // Getting number of spaces needed
+        let lineTag = ``
+        for (let j = `${i+1}`.length; j < spaceCount; j++)
+            lineTag += " "
+
+        lineTag += `${i+1}  `
+
+        lined += lineTag+"\n"
+    }
+
+    let spaceBuffer = ""
+    for (let i = 0; i < spaceCount+2; i++)
+    {
+        spaceBuffer += " "
+    }
+
+    const textWidth = getTextWidth(spaceBuffer, getCanvasFont(document.getElementById("code")))
+    // lineNumbers.style.width = `calc(${textWidth}px)`
+    lineNumbers.innerHTML = colorCode(lined, lineColor)
+
+    rawEditor.style.width    = `calc(100% - ${textWidth}px)`
+    stylizedCode.style.width = `calc(100% - ${textWidth}px)`
+    rawEditor.style.left     = `${textWidth}px`
+    stylizedCode.style.left  = `${textWidth}px`
+
+    newcode += "\n\n\n"
 
     return newcode
 }
