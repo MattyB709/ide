@@ -9,15 +9,25 @@
 </head>
     <body>
         <div id="top-bar">
-
+            <div class="top-button" id="run-button"></div>
         </div>
         <div id="action-bar">
-            <span class="edit-font action-tab">Untitled</span>
-            <span class="edit-font action-tab">Terminal</span>
+
+            <div id="actions-list">
+                <div id="run-button">
+
+                </div>
+            </div>
         </div>
 
         <div id="side-bar">
-
+            <div id="side-bar-title">EXPLORER</div>
+            <div id="side-bar-header">
+                Matthew's IDE
+                <div class="side-button-container">
+                    <div id="side-bar-new-file"></div>
+                </div>
+            </div>
         </div>
 
         <div id="text-area">
@@ -31,13 +41,16 @@
                     autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                 ></code>
             </div>
-            <div id="console-window" class="window">
-                
+            <div id="terminal-window" class="window">
+                <div id="terminal-code">
+
+                </div>
             </div>
         </div>
 
         <!-- <button id="magic-button">Magic Button</button>
         <div id="errors"></div> -->
+        <script src="./src/js/styling-code.js"></script>
         <script src="./src/js/index.js"></script> 
     </body>
 </html>
