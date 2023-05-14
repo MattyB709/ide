@@ -183,8 +183,8 @@ body {
   --padding: 1em;
   padding-left: var(--padding);
   padding-right: var(--padding);
-  height: var(--action-bar-space);
-  width: (100% - var(--padding));
+  height: calc(var(--action-bar-space) + 4px);
+  width: calc(100% - var(--padding));
   /* background-color: var(--top-bar-color); */
 
   text-align: left;
@@ -216,6 +216,32 @@ body {
   display: flex;
 
   align-items: center;  /* position: absolute; */
+}
+
+.side-bar-file {
+  --padding: 1em;
+  padding: .5em;
+  font-size: 80%;
+
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.side-bar-file-creation {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 80%;
+  padding: .5em;
+  font-family: monospace;
+
+  border: solid 2px #3f5f7c;
+}
+
+.side-bar-file:hover {
+  background-color: rgba(141, 194, 255, 0.185);
 }
 
 #side-bar-new-file {

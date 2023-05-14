@@ -10,22 +10,23 @@ const lineNumbers = document.getElementById("line-numbers")
 const terminalWindow = document.getElementById("terminal-window")
 const terminalCode = document.getElementById("terminal-code")
 
-// const 
+const files = [{
+    "name": "starter-file",
+    "tabs": [
+        {
+            "title": "Untitled",
+            "type": "code",
+            "text": ""
+        },
+        {
+            "title": "Terminal",
+            "type": "terminal",
+            "text": ""
+        }
+    ]
+}]
 
 var errors = ""
-
-const starterTabs = []
-starterTabs.push({
-    "title": "Untitled",
-    "type": "code",
-    "text": ""
-})
-
-starterTabs.push({
-    "title": "Terminal",
-    "type": "terminal",
-    "text": ""
-})
 
 const log = console.log
 
@@ -97,7 +98,7 @@ function createTab(tabData)
 
 const tabs = []
 
-starterTabs.map(createTab)
+files[0].tabs.map(createTab)
 
 currentTab = tabs[0]
 setCurrentTab(tabs[0])
