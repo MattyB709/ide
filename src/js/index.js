@@ -115,7 +115,7 @@ function createFileObj(filename)
         // Checking if tab exists
         let tab;
         tabObjects.map((tabObj) => {
-            if (tabObj.data.file == filename)
+            if (tabObj.data.file == filename && tabObj.data.type == "code")
                 tab = tabObj
         })
 
@@ -192,9 +192,9 @@ runButton.onclick = () => {
             // Searching for tab
             tabObjects.map((ttab) => {
                 if (ttab.data.type == "terminal" && ttab.data.file == fileToRun)   
-                    tab == ttab
+                    tab = ttab
             })
-            if (!tab)
+            if (tab == undefined)
             {
                 const newTab = {
                     "type": "terminal",
