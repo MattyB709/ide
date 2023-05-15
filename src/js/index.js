@@ -14,35 +14,31 @@ const lineNumbers = document.getElementById("line-numbers")
 const terminalWindow = document.getElementById("terminal-window")
 const terminalCode = document.getElementById("terminal-code")
 
-const fileObjects = {}
+const fileObjects = {};
 const tabObjects = []
 
 let currentTab;
 
-const files = {
-    "starter-file.js": `console.log("Hello World!");`
-}
+let files;
 
-const tabs =[
-    // {
-    //     "title": "Untitled",
-    //     "type": "code",
-    //     "file": "starter-file.js",
-    // },
-    // {
-    //     "title": "Terminal",
-    //     "type": "terminal",
-    //     "text": ""
-    // }
-]
+const defaultFiles = JSON.stringify({
+    "starter-file.js": `console.log("Hello World!");`
+})
+
+const tabs = []
 
 var errors = ""
 
 const log = console.log
 
+const storageKey = "key:0.0"
+
+files = JSON.parse(window.localStorage.getItem(storageKey) || defaultFiles)
+log(files)
+
 function fileUpdate(filename)
 {
-
+    window.localStorage.setItem(storageKey, JSON.stringify(files))
 }
 
 function onScroll()
