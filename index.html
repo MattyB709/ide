@@ -8,12 +8,28 @@
     <title>Awesome IDE</title>
 </head>
     <body>
-        <div id="action-bar">
+        <div id="top-bar">
             
+        </div>
+        <div id="action-bar">
+
+            <div id="actions-list">
+                <div id="run-button">
+
+                </div>
+            </div>
         </div>
 
         <div id="side-bar">
-
+            <div id="side-bar-title">EXPLORER</div>
+            <div id="side-bar-header">
+                Matthew's IDE
+                <div class="side-button-container">
+                    <div id="side-bar-new-file"></div>
+                </div>
+            </div>
+            <!-- <div class="side-bar-file selected">Test File</div> -->
+            <!-- <input type="text" class="side-bar-file-creation"> -->
         </div>
 
         <div id="text-area">
@@ -27,13 +43,17 @@
                     autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                 ></code>
             </div>
-            <div id="console-window" class="window">
-                
+            <div id="terminal-window" class="window">
+                <div id="terminal-code">
+
+                </div>
             </div>
         </div>
 
         <!-- <button id="magic-button">Magic Button</button>
         <div id="errors"></div> -->
+        <script src="./src/js/file-utils.js"></script>
+        <script src="./src/js/styling-code.js"></script>
         <script src="./src/js/index.js"></script> 
     </body>
 </html>
