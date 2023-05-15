@@ -209,6 +209,26 @@ body {
   /* border-left: var(--main-border); */
 }
 
+.action-bar-tab-x {
+  
+  margin-left: .5em;
+
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.action-bar-tab-x:hover {
+  background: url("../imgs/x.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80%;
+
+  filter: opacity(50%);
+
+  border-radius: 25%;
+  background-color: #ffffff1a;
+}
+
 .action-tab:first-child {
   border-left: none;
   /* margin-left: 4px; */

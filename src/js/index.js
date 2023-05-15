@@ -4,6 +4,7 @@ const actionBar = document.getElementById("action-bar")
 const runButton = document.getElementById("run-button")
 
 const sideBar = document.getElementById("side-bar")
+const sideBarNewFile = document.getElementById('side-bar-new-file')
 
 const editorWindow = document.getElementById("editor-window")
 const rawEditor = document.getElementById("editing")
@@ -85,10 +86,18 @@ function setCurrentTab(tab)
     if (currentTab)
         currentTab.tab.classList.remove("selected")
     currentTab = tab
-    tab.tab.classList.add("selected")
 
     editorWindow.style.visibility = "hidden"
     terminalWindow.style.visibility = "hidden"
+    // return
+
+    if (tab == undefined)
+    {
+        return
+    }
+        
+
+    tab.tab.classList.add("selected")
 
     switch (tab.data.type)
     {
@@ -111,6 +120,7 @@ function createFileObj(filename)
     const div = document.createElement("div")
     div.classList.add("side-bar-file")
     div.innerHTML = filename
+
     div.onclick = () => {
         // Checking if tab exists
         let tab;
@@ -144,12 +154,29 @@ function createTabObj(tabData)
     const tab = document.createElement('span')
     tab.classList.add("edit-font")
     tab.classList.add("action-tab")
+
     actionBar.appendChild(tab)
     tab.innerHTML = tabData.title
     const data = {
         "tab": tab,
         "data": tabData
     }
+
+    const xButton = document.createElement("div")
+    xButton.classList.add("action-bar-tab-x")
+    xButton.onclick = (e) => {
+        tabs.splice(tabs.indexOf(tabData), 1)
+        tabObjects.splice(tabObjects.indexOf(data), 1)
+        tab.remove()
+
+        e.stopPropagation()
+        
+        if (currentTab == data)
+        {
+            setCurrentTab()
+        }
+    }
+    tab.appendChild(xButton)
 
     tab.onclick = () => setCurrentTab(data)
 
@@ -241,6 +268,40 @@ function logTo(terminal, ...value)
     tab.data.text += value+"\n"
     updateTerminal(tab)
 }
+
+function newFileGui()
+{
+    let created = false
+    const div = document.createElement("input")
+    div.type = "text"
+    div.classList.add("side-bar-file-creation")
+    sideBar.appendChild(div)
+    div.focus()
+
+    function launchCreation()
+    {
+        if (div.value == "")
+            return
+
+        if (created)
+            return
+        created = true
+
+        let fileName = NewFileName(files, div.value)
+
+        files[fileName] = ""
+        createFileObj(fileName)
+        div.remove()
+    }
+
+    div.onkeydown = (e) => {
+        if (e.key == "Enter")
+            launchCreation()
+    }
+    div.onblur = launchCreation
+}
+
+sideBarNewFile.onclick = newFileGui
 
 window.onerror = (error, url, lineNumber, column, errorObj) => {
     logTo(currentTab.data.file, `<div class="error">${error}</div><div class="error">At line ${lineNumber-5}</div>`)
