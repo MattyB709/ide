@@ -1,7 +1,7 @@
-const button = document.getElementById("magic-button")
-
+// Getting HTML Elements
 const actionBar = document.getElementById("action-bar")
 const runButton = document.getElementById("run-button")
+const clearButton = document.getElementById("clear-button")
 
 const sideBar = document.getElementById("side-bar")
 const sideBarNewFile = document.getElementById('side-bar-new-file')
@@ -14,46 +14,52 @@ const lineNumbers = document.getElementById("line-numbers")
 const terminalWindow = document.getElementById("terminal-window")
 const terminalCode = document.getElementById("terminal-code")
 
+//  Files and Tabs data setUp
 const fileObjects = {};
 const tabObjects = []
 
 let currentTab;
 
 let files;
+const tabs = []
 
+// The default files if no previous data exists
 const defaultFiles = JSON.stringify({
     "starter-file.js": `console.log("Hello World!");`
 })
 
-const tabs = []
-
-var errors = ""
-
+// Storing the original log function as it will be overwritten later
 const log = console.log
 
 const storageKey = "key:0.0"
 
+// Reading files
 files = JSON.parse(window.localStorage.getItem(storageKey) || defaultFiles)
-log(files)
 
 function fileUpdate(filename)
 {
+    // Storing data
     window.localStorage.setItem(storageKey, JSON.stringify(files))
 }
 
 function onScroll()
 {
+    // Matching Scroll values
     stylizedCode.scrollLeft = rawEditor.scrollLeft
     stylizedCode.scrollTop = rawEditor.scrollTop
     lineNumbers.scrollTop = rawEditor.scrollTop
 }
 
+// Whenever to code tab is updated
 function codeUpdate()
 {
+    // File saving
     files[currentTab.data.file] = rawEditor.value
     fileUpdate(currentTab.file)
 
     onScroll()
+
+    // styling the tab
     const styles = styleCode(rawEditor.value) 
 
     lineNumbers.innerHTML = styles.lined
@@ -72,37 +78,60 @@ function updateTerminal(tab)
 {
     if (currentTab == tab)
     {
+        // Updating the terminal
         terminalCode.innerHTML = tab.data.text
         terminalCode.scrollTop = terminalCode.scrollHeight;
     }
 }
 
+const visibleButtons = {
+    "clear": {
+        "button": clearButton,
+        "terminal": true,
+        "code": false
+    },
+    "run": {
+        "button": runButton,
+        "terminal": true,
+        "code": true
+    }
+}
+
 function setCurrentTab(tab)
 {
+    // Unselecting current tav
     if (currentTab)
         currentTab.tab.classList.remove("selected")
+
     currentTab = tab
 
+    // Hiding the windows
     editorWindow.style.visibility = "hidden"
     terminalWindow.style.visibility = "hidden"
     // return
 
+    let tabType = tab && tab.data.type
+
+    Object.keys(visibleButtons).map((button) => {
+        visibleButtons[button].button.style.visibility = visibleButtons[button][tabType]? "visible":"hidden"
+    })
+
     if (tab == undefined)
-    {
         return
-    }
         
 
     tab.tab.classList.add("selected")
 
-    switch (tab.data.type)
+    switch (tabType)
     {
         case "code":
+            // Code
             rawEditor.value = files[tab.data.file]
             codeUpdate()
             editorWindow.style.visibility = "visible"
             break;
         case "terminal":
+            // Terminal
             updateTerminal();
             terminalWindow.style.visibility = "visible"
             break;
@@ -111,12 +140,16 @@ function setCurrentTab(tab)
     rawEditor.value = tab.text
 }
 
+setCurrentTab()
+
+// Creating the sidebar file div
 function createFileObj(filename)
 {
     const div = document.createElement("div")
     div.classList.add("side-bar-file")
     div.innerHTML = filename
 
+    // Select tab
     div.onclick = () => {
         // Checking if tab exists
         let tab;
@@ -127,9 +160,12 @@ function createFileObj(filename)
 
         if (tab != undefined)
         {
-            // Already esistx
+            // Already exists
             setCurrentTab(tab)
         } else {
+
+            // If tab doesnt exist then create it
+
             const newTab = {
                 "type": "code",
                 "title": filename,
@@ -153,11 +189,13 @@ function createTabObj(tabData)
 
     actionBar.appendChild(tab)
     tab.innerHTML = tabData.title
+    // Tab data
     const data = {
         "tab": tab,
         "data": tabData
     }
 
+    // X button on the side
     const xButton = document.createElement("div")
     xButton.classList.add("action-bar-tab-x")
     xButton.onclick = (e) => {
@@ -172,8 +210,10 @@ function createTabObj(tabData)
             setCurrentTab()
         }
     }
+
     tab.appendChild(xButton)
 
+    // On click switch to tab
     tab.onclick = () => setCurrentTab(data)
 
     tabObjects.push(data)
@@ -187,6 +227,7 @@ Object.keys(files).map(createFileObj)
 rawEditor.oninput = codeUpdate
 rawEditor.onscroll = onScroll
 
+// Template used when creating a script
 const scriptTemplate = `
 console.log = (val) => {
     logTo("{terminal}", val)
@@ -245,18 +286,24 @@ runButton.onclick = () => {
     document.body.appendChild(script)
 }
 
+clearButton.onclick = () => {
+    if (currentTab && currentTab.data.type == "terminal")
+    {
+        currentTab.data.text = ""
+        updateTerminal(currentTab)
+    }
+}
+
 function logTo(terminal, ...value)
 {
     // Finding Terminal
     let tab
     tabObjects.map((ttab) => {
         if (terminal == ttab.data.file && ttab.data.type == "terminal")
-        {
             tab = ttab
-        }
     })
 
-    log(tab)
+    // log(tab)
 
     if (!tab)
         return;

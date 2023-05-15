@@ -160,14 +160,10 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 
-  /* position: absolute; */
-  /* top: 0; */
   right: .4em;
   display: flex;
-  /* align-items: center; */
   width: 1.5em;
   height: 1.5em;
-  /* aspect-ratio: 1; */
 
   filter: opacity(25%);
 
@@ -175,6 +171,28 @@ body {
 }
 
 #run-button:hover {
+  filter: opacity(50%);
+  border-radius: 20%;
+  background-color: rgba(255, 255, 255, 0.288);
+}
+
+#clear-button {
+  background: url("../imgs/clear.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  right: .4em;
+  display: flex;
+  width: 1.5em;
+  height: 1.5em;
+
+  filter: opacity(25%);
+
+  cursor: pointer;
+}
+
+#clear-button:hover {
   filter: opacity(50%);
   border-radius: 20%;
   background-color: rgba(255, 255, 255, 0.288);
