@@ -74,7 +74,10 @@ function codeUpdate()
 function updateTerminal(tab)
 {
     if (currentTab == tab)
+    {
         terminalCode.innerHTML = tab.data.text
+        terminalCode.scrollTop = terminalCode.scrollHeight;
+    }
 }
 
 function setCurrentTab(tab)
@@ -215,6 +218,7 @@ runButton.onclick = () => {
     let code = scriptTemplate.replaceAll("{code}", files[fileToRun])
     code = code.replaceAll("{terminal}",  fileToRun)
     script.innerHTML = code
+    script.crossorigin = "test"
     document.body.appendChild(script)
 }
 
@@ -239,7 +243,5 @@ function logTo(terminal, ...value)
 }
 
 window.onerror = (error, url, lineNumber, column, errorObj) => {
-    log(errorObj)
-    terminalCode.innerHTML += `<div class="error">${error}</div><div class="error">At line ${lineNumber-6}</div>`
-    terminalCode.scrollTop = elem.scrollHeight;
+    logTo(currentTab.data.file, `<div class="error">${error}</div><div class="error">At line ${lineNumber-5}</div>`)
 }
