@@ -19,6 +19,8 @@ body {
 
   font-family: monospace;
   color: white;
+
+  overflow: hidden;
 }
 
 
@@ -107,6 +109,18 @@ body {
   color: rgb(255, 255, 255);
 }
 
+#terminal-code {
+  /* padding: 1em; */
+
+  position: absolute;
+  left: 2em;
+  width: calc(100% - 2em);
+  height: 100%;
+
+  white-space: pre;
+  overflow: scroll;
+}
+
 #top-bar {
   position: absolute;
   left: 0%;
@@ -129,6 +143,41 @@ body {
 
 #actions-list {
   position: absolute;
+  display: flex;
+  flex-direction: row-reverse;
+  width: 10%;
+  right: .5em;
+  height: 100%;
+
+  align-items: center;
+
+  z-index: 1;
+}
+
+#run-button {
+  background: url("../imgs/run.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  /* position: absolute; */
+  /* top: 0; */
+  right: .4em;
+  display: flex;
+  /* align-items: center; */
+  width: 1.5em;
+  height: 1.5em;
+  /* aspect-ratio: 1; */
+
+  filter: opacity(25%);
+
+  cursor: pointer;
+}
+
+#run-button:hover {
+  filter: opacity(50%);
+  border-radius: 20%;
+  background-color: rgba(255, 255, 255, 0.288);
 }
 
 .action-tab {
@@ -143,6 +192,8 @@ body {
 
   display:inline-flex;
   align-items:center;
+
+  z-index: 0;
 
   /* margin-left: .25em; */
 
@@ -226,6 +277,10 @@ body {
   cursor: pointer;
 
   user-select: none;
+}
+
+.side-bar-file.selected {
+  background-color: #ffffff2c;
 }
 
 .side-bar-file-creation {

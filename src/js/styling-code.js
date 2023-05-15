@@ -189,7 +189,6 @@ function styleCode(code)
     const lineCount = (newcode.match(/\n/g) || []).length+1;
     const spaceCount = Math.ceil(Math.log10(lineCount))+1
     let lined = ""
-    log(spaceCount)
     for (let i = 0; i < lineCount; i++)
     {
         // Getting number of spaces needed

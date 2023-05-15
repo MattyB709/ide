@@ -1,6 +1,9 @@
 const button = document.getElementById("magic-button")
 
 const actionBar = document.getElementById("action-bar")
+const runButton = document.getElementById("run-button")
+
+const sideBar = document.getElementById("side-bar")
 
 const editorWindow = document.getElementById("editor-window")
 const rawEditor = document.getElementById("editing")
@@ -10,25 +13,36 @@ const lineNumbers = document.getElementById("line-numbers")
 const terminalWindow = document.getElementById("terminal-window")
 const terminalCode = document.getElementById("terminal-code")
 
-const files = [{
-    "name": "starter-file",
-    "tabs": [
-        {
-            "title": "Untitled",
-            "type": "code",
-            "text": ""
-        },
-        {
-            "title": "Terminal",
-            "type": "terminal",
-            "text": ""
-        }
-    ]
-}]
+const fileObjects = {}
+const tabObjects = []
+
+let currentTab;
+
+const files = {
+    "starter-file.js": `console.log("Hello World!");`
+}
+
+const tabs =[
+    // {
+    //     "title": "Untitled",
+    //     "type": "code",
+    //     "file": "starter-file.js",
+    // },
+    // {
+    //     "title": "Terminal",
+    //     "type": "terminal",
+    //     "text": ""
+    // }
+]
 
 var errors = ""
 
 const log = console.log
+
+function fileUpdate(filename)
+{
+
+}
 
 function onScroll()
 {
@@ -39,6 +53,9 @@ function onScroll()
 
 function codeUpdate()
 {
+    files[currentTab.data.file] = rawEditor.value
+    fileUpdate(currentTab.file)
+
     onScroll()
     const styles = styleCode(rawEditor.value) 
 
@@ -54,24 +71,31 @@ function codeUpdate()
     currentTab.text = rawEditor.value
 }
 
-let currentTab;
+function updateTerminal(tab)
+{
+    if (currentTab == tab)
+        terminalCode.innerHTML = tab.data.text
+}
+
 function setCurrentTab(tab)
 {
-    currentTab.tab.classList.remove("selected")
+    if (currentTab)
+        currentTab.tab.classList.remove("selected")
     currentTab = tab
     tab.tab.classList.add("selected")
 
     editorWindow.style.visibility = "hidden"
     terminalWindow.style.visibility = "hidden"
 
-    switch (tab.type)
+    switch (tab.data.type)
     {
         case "code":
-            rawEditor.value = tab.text
+            rawEditor.value = files[tab.data.file]
             codeUpdate()
             editorWindow.style.visibility = "visible"
             break;
         case "terminal":
+            updateTerminal();
             terminalWindow.style.visibility = "visible"
             break;
     }
@@ -79,7 +103,40 @@ function setCurrentTab(tab)
     rawEditor.value = tab.text
 }
 
-function createTab(tabData)
+function createFileObj(filename)
+{
+    const div = document.createElement("div")
+    div.classList.add("side-bar-file")
+    div.innerHTML = filename
+    div.onclick = () => {
+        // Checking if tab exists
+        let tab;
+        tabObjects.map((tabObj) => {
+            if (tabObj.data.file == filename)
+                tab = tabObj
+        })
+
+        if (tab != undefined)
+        {
+            // Already esistx
+            setCurrentTab(tab)
+        } else {
+            const newTab = {
+                "type": "code",
+                "title": filename,
+                "file": filename,
+            }
+
+            tabs.push(newTab)
+            const tabObj = createTabObj(newTab)
+            setCurrentTab(tabObj)
+        }
+    }
+
+    sideBar.appendChild(div)
+}
+
+function createTabObj(tabData)
 {
     const tab = document.createElement('span')
     tab.classList.add("edit-font")
@@ -88,47 +145,101 @@ function createTab(tabData)
     tab.innerHTML = tabData.title
     const data = {
         "tab": tab,
-        ...tabData
+        "data": tabData
     }
 
     tab.onclick = () => setCurrentTab(data)
 
-    tabs.push(data)
+    tabObjects.push(data)
+
+    return data
 }
 
-const tabs = []
-
-files[0].tabs.map(createTab)
-
-currentTab = tabs[0]
-setCurrentTab(tabs[0])
+tabs.map(createTabObj)
+Object.keys(files).map(createFileObj)
 
 rawEditor.oninput = codeUpdate
 rawEditor.onscroll = onScroll
 
-
-
 const scriptTemplate = `
 console.log = (val) => {
-    var elem = document.getElementById('errors');
-    elem.innerHTML += val+"\\n"
-    elem.scrollTop = elem.scrollHeight;
+    logTo("{terminal}", val)
 }
+console.log("Started Running {terminal}\\n");
 {code}
+console.log("\\n{terminal} has Finished Running\\n");
 `
 
-button.onclick = () => {
-    const script = document.createElement("script")
-    script.onerror = (error) => {
-        // console.log(error)
-    }
-    script.innerHTML = scriptTemplate.replace("{code}", rawEditor.value)
+runButton.onclick = () => {
+    // Tab stuff
+    let tab
+    let fileToRun
+    if (currentTab && currentTab.data.type == "terminal")
+    {
+        if (currentTab.data.file)
+        {
+            tab = currentTab
+            fileToRun = currentTab.data.file
+        }
+    } else if (currentTab && currentTab.data.type == "code") {
+        if (currentTab.data.file)
+        {
+            fileToRun = currentTab.data.file
 
+            // Searching for tab
+            tabObjects.map((ttab) => {
+                if (ttab.data.type == "terminal" && ttab.data.file == fileToRun)   
+                    tab == ttab
+            })
+            if (!tab)
+            {
+                const newTab = {
+                    "type": "terminal",
+                    "title": "output:"+fileToRun,
+                    "text": "",
+                    "file": fileToRun
+                }
+
+                tab = createTabObj(newTab)
+            }
+        }
+    }
+
+    if (!tab || !fileToRun)
+        return;
+    
+    setCurrentTab(tab)
+
+    // Running File
+    const script = document.createElement("script")
+    let code = scriptTemplate.replaceAll("{code}", files[fileToRun])
+    code = code.replaceAll("{terminal}",  fileToRun)
+    script.innerHTML = code
     document.body.appendChild(script)
 }
 
+function logTo(terminal, ...value)
+{
+    // Finding Terminal
+    let tab
+    tabObjects.map((ttab) => {
+        if (terminal == ttab.data.file && ttab.data.type == "terminal")
+        {
+            tab = ttab
+        }
+    })
+
+    log(tab)
+
+    if (!tab)
+        return;
+
+    tab.data.text += value+"\n"
+    updateTerminal(tab)
+}
+
 window.onerror = (error, url, lineNumber, column, errorObj) => {
-    var elem = document.getElementById('errors');
-    elem.innerHTML += `<div class="error">${error}</div><div class="error">At line ${lineNumber-6}</div>`
-    elem.scrollTop = elem.scrollHeight;
+    log(errorObj)
+    terminalCode.innerHTML += `<div class="error">${error}</div><div class="error">At line ${lineNumber-6}</div>`
+    terminalCode.scrollTop = elem.scrollHeight;
 }
