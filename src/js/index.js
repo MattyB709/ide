@@ -286,6 +286,7 @@ runButton.onclick = () => {
     document.body.appendChild(script)
 }
 
+// Clears a terminal
 clearButton.onclick = () => {
     if (currentTab && currentTab.data.type == "terminal")
     {
@@ -312,6 +313,7 @@ function logTo(terminal, ...value)
     updateTerminal(tab)
 }
 
+// Creates the GUI for the creation of a new file
 function newFileGui()
 {
     let created = false
@@ -320,7 +322,8 @@ function newFileGui()
     div.classList.add("side-bar-file-creation")
     sideBar.appendChild(div)
     div.focus()
-
+    
+    // Creates the file
     function launchCreation()
     {
         if (div.value == "")
@@ -346,6 +349,7 @@ function newFileGui()
 
 sideBarNewFile.onclick = newFileGui
 
+// When a script errors the terminal will pick it up
 window.onerror = (error, url, lineNumber, column, errorObj) => {
     logTo(currentTab.data.file, `<div class="error">${error}</div><div class="error">At line ${lineNumber-5}</div>`)
 }
